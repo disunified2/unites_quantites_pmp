@@ -1,4 +1,4 @@
-# File serialization project
+# Units and Quantities project
 This project is the second project of the course Multi-Paradigm Programming in the third year of the computer science bachelors degree at the University of Franche-Comté
 
 # Authors
