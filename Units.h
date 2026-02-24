@@ -24,22 +24,22 @@ namespace phy {
    * Various type aliases
    */
 
-  using Metre               = Unit</* implementation defined */>;
-  using Kilogram            = Unit</* implementation defined */>;
-  using Second              = Unit</* implementation defined */>;
-  using Ampere              = Unit</* implementation defined */>;
-  using Kelvin              = Unit</* implementation defined */>;
-  using Mole                = Unit</* implementation defined */>;
-  using Candela             = Unit</* implementation defined */>;
-  using Radian              = Unit</* implementation defined */>;
+  using Metre               = Unit<1, 0, 0, 0, 0, 0, 0>;
+  using Kilogram            = Unit<0, 1, 0, 0, 0, 0, 0>;
+  using Second              = Unit<0, 0, 1, 0, 0, 0, 0>;
+  using Ampere              = Unit<0, 0, 0, 1, 0, 0, 0>;
+  using Kelvin              = Unit<0, 0, 0, 0, 1, 0, 0>;
+  using Mole                = Unit<0, 0, 0, 0, 0, 1, 0>;
+  using Candela             = Unit<0, 0, 0, 0, 0, 0, 1>;
+  using Radian              = Unit<0, 0, 0, 0, 0, 0, 0>;
 
-  using Volt                = Unit</* implementation defined */>;
-  using Ohm                 = Unit</* implementation defined */>;
-  using Watt                = Unit</* implementation defined */>;
-  using Hertz               = Unit</* implementation defined */>;
-  using Pascal              = Unit</* implementation defined */>;
-  using Speed               = Unit</* implementation defined */>;
-  using Newton              = Unit</* implementation defined */>;
+  using Volt                = Unit<2, 1, -3, -1, 0, 0, 0>;
+  using Ohm                 = Unit<2, 1, -3, -2, 0, 0, 0>;
+  using Watt                = Unit<2, 1, -3, 0, 0, 0, 0>;
+  using Hertz               = Unit<0, 0, -1, 0, 0, 0, 0>;
+  using Pascal              = Unit<-1, 1, -2, 0, 0, 0, 0>;
+  using Speed               = Unit<1, 0, -1, 0, 0, 0, 0>;
+  using Newton              = Unit<1, 1, -2, 0, 0, 0, 0>;
 
   /*
    * A quantity is a value associated with a unit and a ratio
@@ -66,31 +66,31 @@ namespace phy {
    * Various quantities
    */
 
-  using Length                = Qty</* implementation defined */>;
-  using Mass                  = Qty</* implementation defined */>;
-  using Time                  = Qty</* implementation defined */>;
-  using Current               = Qty</* implementation defined */>;
-  using Temperature           = Qty</* implementation defined */>;
-  using Amount                = Qty</* implementation defined */>;
-  using LuminousIntensity     = Qty</* implementation defined */>;
+  using Length                = Qty<Metre>;
+  using Mass                  = Qty<Kilogram>;
+  using Time                  = Qty<Second>;
+  using Current               = Qty<Ampere>;
+  using Temperature           = Qty<Kelvin>;
+  using Amount                = Qty<Mole>;
+  using LuminousIntensity     = Qty<Candela>;
 
-  using Frequency             = Qty</* implementation defined */>;
-  using Force                 = Qty</* implementation defined */>;
-  using MeterSecond           = Qty</* implementation defined */>;
-  using ElectricPotential     = Qty</* implementation defined */>;
-  using ElectricalResistance  = Qty</* implementation defined */>;
-  using Power                 = Qty</* implementation defined */>;
-  using Pressure              = Qty</* implementation defined */>;
+  using Frequency             = Qty<Hertz>;
+  using Force                 = Qty<Newton>;
+  using MeterSecond           = Qty<Speed>;
+  using ElectricPotential     = Qty<Volt>;
+  using ElectricalResistance  = Qty<Ohm>;
+  using Power                 = Qty<Watt>;
+  using Pressure              = Qty<Pascal>;
 
   /*
    * Some weird quantities
    */
 
-  using Mile                  = Qty</* implementation defined */>;
-  using Yard                  = Qty</* implementation defined */>;
-  using Foot                  = Qty</* implementation defined */>;
-  using Inch                  = Qty</* implementation defined */>;
-  using Knot                  = Qty</* implementation defined */>;
+  // using Mile                  = Qty</* implementation defined */>;
+  // using Yard                  = Qty</* implementation defined */>;
+  // using Foot                  = Qty</* implementation defined */>;
+  // using Inch                  = Qty</* implementation defined */>;
+  // using Knot                  = Qty</* implementation defined */>;
 
   /*
    * Comparison operators
@@ -119,16 +119,40 @@ namespace phy {
    */
 
   template<typename U, typename R1, typename R2>
-  /* implementation defined */ operator+(Qty<U, R1> q1, Qty<U, R2> q2);
+  auto operator+(Qty<U, R1> q1, Qty<U, R2> q2);
 
   template<typename U, typename R1, typename R2>
-  /* implementation defined */ operator-(Qty<U, R1> q1, Qty<U, R2> q2);
+  auto operator-(Qty<U, R1> q1, Qty<U, R2> q2);
 
   template<typename U1, typename R1, typename U2, typename R2>
-  /* implementation defined */ operator*(Qty<U1, R1> q1, Qty<U2, R2> q2);
+  auto operator*(Qty<U1,R1> q1, Qty<U2,R2> q2)
+  -> Qty<
+      Unit<
+          U1::metre   + U2::metre,
+          U1::kilogram+ U2::kilogram,
+          U1::second  + U2::second,
+          U1::ampere  + U2::ampere,
+          U1::kelvin  + U2::kelvin,
+          U1::mole    + U2::mole,
+          U1::candela + U2::candela
+      >,
+      typename std::ratio_multiply<R1,R2>::type
+  >;
 
   template<typename U1, typename R1, typename U2, typename R2>
-  /* implementation defined */ operator/(Qty<U1, R1> q1, Qty<U2, R2> q2);
+  auto operator/(Qty<U1, R1> q1, Qty<U2, R2> q2)
+  -> Qty<
+      Unit<
+          U1::metre   - U2::metre,
+          U1::kilogram- U2::kilogram,
+          U1::second  - U2::second,
+          U1::ampere  - U2::ampere,
+          U1::kelvin  - U2::kelvin,
+          U1::mole    - U2::mole,
+          U1::candela - U2::candela
+    >,
+    typename std::ratio_divide<R1,R2>::type
+  >;
 
 
   /*
@@ -150,7 +174,7 @@ namespace phy {
     inline Temperature operator ""_kelvins(unsigned long long int val);
     inline Amount operator ""_moles(unsigned long long int val);
     inline LuminousIntensity operator ""_candelas(unsigned long long int val);
-    inline /* implementation defined */ operator ""_celsius(unsigned long long int val);
+    inline Temperature operator ""_celsius(unsigned long long int val);
 
   }
 
