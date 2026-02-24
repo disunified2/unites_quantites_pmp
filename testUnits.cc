@@ -23,6 +23,31 @@ TEST(basicUnitTest, Volt) {
   EXPECT_EQ(phy::Metre::candela, 0);
 }
 
+// Testing basic comparison operators
+TEST(quantityComparisonTestEquals, trueNoConversion) {
+  const phy::Length l1(5);
+  const phy::Length l2(5);
+
+  EXPECT_TRUE(l1 == l2);
+}
+TEST(quantityComparisonTestEquals, falseNoConversion) {
+  const phy::Length l1(5);
+  const phy::Length l2(6);
+
+  EXPECT_FALSE(l1 == l2);
+}
+TEST(quantityComparisonTestEquals, trueConversion) {
+  const phy::Length l1(5); // 5 meters
+  const phy::Qty<phy::Metre, std::centi> l2(500); // 500 centimeters
+
+  EXPECT_TRUE(l1 == l2);
+}
+TEST(quantityComparisonTestEquals, falseConversion) {
+  const phy::Length l1(1);
+  const phy::Qty<phy::Metre, std::milli> l2(1001);
+
+  EXPECT_FALSE(l1 == l2);
+}
 
 int main(int argc, char* argv[]) {
   ::testing::InitGoogleTest(&argc, argv);
