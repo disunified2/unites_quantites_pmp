@@ -86,33 +86,74 @@ namespace phy {
    * Some weird quantities
    */
 
-  // using Mile                  = Qty</* implementation defined */>;
-  // using Yard                  = Qty</* implementation defined */>;
-  // using Foot                  = Qty</* implementation defined */>;
-  // using Inch                  = Qty</* implementation defined */>;
-  // using Knot                  = Qty</* implementation defined */>;
+  using Mile                  = Qty<Metre, std::ratio<1609344, 1000>>;
+  using Yard                  = Qty<Metre, std::ratio<9144, 10000>>;
+  using Foot                  = Qty<Metre, std::ratio<3048, 10000>>;
+  using Inch                  = Qty<Metre, std::ratio<254, 10000>>;
+  using Knot                  = Qty<Speed, std::ratio<463, 900>>;
+
+  /*
+   * Cast function between two quantities
+   */
+
+  template<typename ResQty, typename U, typename R>
+  ResQty qtyCast(Qty<U,R> val) {
+      static_assert(std::is_same_v<typename ResQty::Unit, U>, "qtyCast requires identical units to convert to");
+
+      using FromRatio = R;
+      using ToRatio = typename ResQty::Ratio;
+
+      using Conv = std::ratio_divide<FromRatio, ToRatio>;
+
+      ResQty res;
+      res.value = val.value * Conv::num / Conv::den;
+      return res;
+  }
 
   /*
    * Comparison operators
    */
 
-  template<typename U, typename R1, typename R2>
-  bool operator==(Qty<U, R1> q1, Qty<U, R2> q2);
+  // All comparison operators are between two of the same aliases
 
   template<typename U, typename R1, typename R2>
-  bool operator!=(Qty<U, R1> q1, Qty<U, R2> q2);
+  bool operator==(Qty<U, R1> q1, Qty<U, R2> q2) {
+      using CommonQty = Qty<U, std::ratio<1>>;
+      CommonQty val1 = qtyCast<CommonQty>(q1);
+      CommonQty val2 = qtyCast<CommonQty>(q2);
+      return val1 == val2;
+  }
 
   template<typename U, typename R1, typename R2>
-  bool operator<(Qty<U, R1> q1, Qty<U, R2> q2);
+  bool operator!=(Qty<U, R1> q1, Qty<U, R2> q2) {
+      return !(q1 == q2);
+  }
 
   template<typename U, typename R1, typename R2>
-  bool operator<=(Qty<U, R1> q1, Qty<U, R2> q2);
+  bool operator<(Qty<U, R1> q1, Qty<U, R2> q2) {
+      using CommonQty = Qty<U, std::ratio<1>>;
+      CommonQty val1 = qtyCast<CommonQty>(q1);
+      CommonQty val2 = qtyCast<CommonQty>(q2);
+      return val1 < val2;
+  }
 
   template<typename U, typename R1, typename R2>
-  bool operator>(Qty<U, R1> q1, Qty<U, R2> q2);
+  bool operator<=(Qty<U, R1> q1, Qty<U, R2> q2) {
+      return q1 < q2 || q1 == q2;
+  }
 
   template<typename U, typename R1, typename R2>
-  bool operator>=(Qty<U, R1> q1, Qty<U, R2> q2);
+  bool operator>(Qty<U, R1> q1, Qty<U, R2> q2) {
+      using CommonQty = Qty<U, std::ratio<1>>;
+      CommonQty val1 = qtyCast<CommonQty>(q1);
+      CommonQty val2 = qtyCast<CommonQty>(q2);
+      return val1 > val2;
+  }
+
+  template<typename U, typename R1, typename R2>
+  bool operator>=(Qty<U, R1> q1, Qty<U, R2> q2) {
+      return q1 > q2 || q1 == q2;
+  }
 
   /*
    * Arithmetic operators
@@ -124,42 +165,13 @@ namespace phy {
   template<typename U, typename R1, typename R2>
   auto operator-(Qty<U, R1> q1, Qty<U, R2> q2);
 
+#if 0
   template<typename U1, typename R1, typename U2, typename R2>
-  auto operator*(Qty<U1,R1> q1, Qty<U2,R2> q2)
-  -> Qty<
-      Unit<
-          U1::metre   + U2::metre,
-          U1::kilogram+ U2::kilogram,
-          U1::second  + U2::second,
-          U1::ampere  + U2::ampere,
-          U1::kelvin  + U2::kelvin,
-          U1::mole    + U2::mole,
-          U1::candela + U2::candela
-      >,
-      typename std::ratio_multiply<R1,R2>::type
-  >;
+  auto operator*(Qty<U1,R1> q1, Qty<U2,R2> q2);
 
   template<typename U1, typename R1, typename U2, typename R2>
-  auto operator/(Qty<U1, R1> q1, Qty<U2, R2> q2)
-  -> Qty<
-      Unit<
-          U1::metre   - U2::metre,
-          U1::kilogram- U2::kilogram,
-          U1::second  - U2::second,
-          U1::ampere  - U2::ampere,
-          U1::kelvin  - U2::kelvin,
-          U1::mole    - U2::mole,
-          U1::candela - U2::candela
-    >,
-    typename std::ratio_divide<R1,R2>::type
-  >;
-
-
-  /*
-   * Cast function between two quantities
-   */
-  template<typename ResQty, typename U, typename R>
-  ResQty qtyCast(Qty<U,R> val);
+  auto operator/(Qty<U1, R1> q1, Qty<U2, R2> q2);
+#endif
 
   namespace literals {
 
