@@ -51,14 +51,24 @@ namespace phy {
 
     intmax_t value;
 
-    Qty();
-    Qty(intmax_t v);
+      Qty() : value(0) {};
+      Qty(intmax_t v) : value(v) {};
 
     template<typename ROther>
-    Qty& operator+=(Qty<U, ROther> other);
+    Qty& operator+=(Qty<U, ROther> other) {
+        using ratio = std::ratio_divide<ROther,R>;
+        this->value += other.value * ratio::num / ratio::den;
+
+        return *this;
+    }
 
     template<typename ROther>
-    Qty& operator-=(Qty<U, ROther> other);
+    Qty& operator-=(Qty<U, ROther> other) {
+        using ratio = std::ratio_divide<ROther,R>;
+        this->value -= other.value * ratio::num / ratio::den;
+
+        return *this;
+    }
 
   };
 
@@ -121,7 +131,7 @@ namespace phy {
       using CommonQty = Qty<U, std::ratio<1>>;
       CommonQty val1 = qtyCast<CommonQty>(q1);
       CommonQty val2 = qtyCast<CommonQty>(q2);
-      return val1 == val2;
+      return val1 == val2;      // return val1.value == val2.value;
   }
 
   template<typename U, typename R1, typename R2>
