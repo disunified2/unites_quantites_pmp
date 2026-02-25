@@ -49,6 +49,152 @@ TEST(quantityComparisonTestEquals, falseConversion) {
   EXPECT_FALSE(l1 == l2);
 }
 
+TEST(quantityAddingTest,sameRatioMeters) {
+  phy::Length l1(5);
+  const phy::Length l2(5);
+  l1 += l2;
+
+  EXPECT_EQ(l1.value, 10);
+}
+
+TEST(quantityAddingTest,sameRatioMillimeters) {
+  phy::Qty<phy::Metre, std::milli> l1(5);
+  const phy::Qty<phy::Metre, std::milli> l2(5);
+  l1 += l2;
+
+  EXPECT_EQ(l1.value, 10);
+}
+
+TEST(quantityAddingTest,sameRatiokilograms) {
+  phy::Mass m1(5);
+  const phy::Mass m2(5);
+  m1 += m2;
+
+  EXPECT_EQ(m1.value, 10);
+}
+
+TEST(quantityAddingTest,differentRatioMetersAndMilliEqualValue) {
+  phy::Length l1(5);
+  const phy::Qty<phy::Metre, std::milli> l2(5000);
+  l1 += l2;
+
+  EXPECT_EQ(l1.value, 10);
+}
+
+TEST(quantityAddingTest,differentRatioMilliAndMeters) {
+  phy::Qty<phy::Metre, std::milli> l1(5000);
+  const phy::Length l2(5);
+  l1 += l2;
+
+  EXPECT_EQ(l1.value, 10000);
+}
+
+//Demander si c'est normal comme comportement
+TEST(quantityAddingTest,differentRatioMetersAndMilli) {
+  phy::Length l1(5);
+  const phy::Qty<phy::Metre, std::milli> l2(5);
+  l1 += l2;
+
+  EXPECT_EQ(l1.value, 5.005);
+}
+
+TEST(quantityAddingTest,differentRatioKilosAndGramsEqualValue) {
+  phy::Mass m1(5);
+  const phy::Qty<phy::Kilogram, std::milli> m2(5000);
+  m1 += m2;
+
+  EXPECT_EQ(m1.value, 10);
+}
+
+TEST(quantityAddingTest,differentRatioGramsAndKilos) {
+  phy::Qty<phy::Kilogram, std::milli> m1(5000);
+  phy::Mass m2(5);
+  m1 += m2;
+
+  EXPECT_EQ(m1.value, 10000);
+}
+
+TEST(quantitySubstractingTest,sameRatioMeters) {
+  phy::Length l1(5);
+  const phy::Length l2(5);
+  l1 -= l2;
+
+  EXPECT_EQ(l1.value, 0);
+}
+
+TEST(quantitySubstractingTest,sameRatioMillimeters) {
+  phy::Qty<phy::Metre, std::milli> l1(5);
+  const phy::Qty<phy::Metre, std::milli> l2(5);
+  l1 -= l2;
+
+  EXPECT_EQ(l1.value, 0);
+}
+
+TEST(quantitySubstractingTest,sameRatiokilograms) {
+  phy::Mass m1(5);
+  const phy::Mass m2(5);
+  m1 -= m2;
+
+  EXPECT_EQ(m1.value, 0);
+}
+
+TEST(quantitySubstractingTest,differentRatioMetersAndMilliEqualValue) {
+  phy::Length l1(5);
+  const phy::Qty<phy::Metre, std::milli> l2(5000);
+  l1 -= l2;
+
+  EXPECT_EQ(l1.value, 0);
+}
+
+TEST(quantitySubstractingTest,differentRatioMilliAndMeters) {
+  phy::Qty<phy::Metre, std::milli> l1(5000);
+  const phy::Length l2(5);
+  l1 -= l2;
+
+  EXPECT_EQ(l1.value, 0);
+}
+
+//Demander si c'est normal comme comportement
+TEST(quantitySubstractingTest,differentRatioMetersAndMilli) {
+  phy::Length l1(5);
+  const phy::Qty<phy::Metre, std::milli> l2(5);
+  l1 -= l2;
+
+  EXPECT_EQ(l1.value, 5.005);
+}
+
+TEST(quantitySubstractingTest,differentRatioKilosAndGramsEqualValue) {
+  phy::Mass m1(5);
+  const phy::Qty<phy::Kilogram, std::milli> m2(5000);
+  m1 -= m2;
+
+  EXPECT_EQ(m1.value, 0);
+}
+
+TEST(quantitySubstractingTest,differentRatioGramsAndKilos) {
+  phy::Qty<phy::Kilogram, std::milli> m1(5000);
+  phy::Mass m2(5);
+  m1 -= m2;
+
+  EXPECT_EQ(m1.value, 0);
+}
+
+TEST(quantitySubstractingTest, notEqualZero) {
+  phy::Length l1(15);
+  const phy::Length l2(5);
+  l1 -= l2;
+
+  EXPECT_EQ(l1.value, 10);
+}
+
+TEST(quantitySubstractingTest, notEqualZeroNegative) {
+  phy::Length l1(5);
+  const phy::Length l2(15);
+  l1 -= l2;
+
+  EXPECT_EQ(l1.value, -10);
+}
+
 int main(int argc, char* argv[]) {
   ::testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();
