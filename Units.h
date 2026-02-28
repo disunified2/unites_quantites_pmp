@@ -131,7 +131,7 @@ namespace phy {
       using CommonQty = Qty<U, std::ratio<1>>;
       CommonQty val1 = qtyCast<CommonQty>(q1);
       CommonQty val2 = qtyCast<CommonQty>(q2);
-      return val1 == val2;      // return val1.value == val2.value;
+      return val1.value == val2.value;      // return val1.value == val2.value;
   }
 
   template<typename U, typename R1, typename R2>
@@ -144,7 +144,7 @@ namespace phy {
       using CommonQty = Qty<U, std::ratio<1>>;
       CommonQty val1 = qtyCast<CommonQty>(q1);
       CommonQty val2 = qtyCast<CommonQty>(q2);
-      return val1 < val2;
+      return val1.value < val2.value;
   }
 
   template<typename U, typename R1, typename R2>
@@ -157,7 +157,7 @@ namespace phy {
       using CommonQty = Qty<U, std::ratio<1>>;
       CommonQty val1 = qtyCast<CommonQty>(q1);
       CommonQty val2 = qtyCast<CommonQty>(q2);
-      return val1 > val2;
+      return val1.value > val2.value;
   }
 
   template<typename U, typename R1, typename R2>
