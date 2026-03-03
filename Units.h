@@ -131,7 +131,7 @@ namespace phy {
       using CommonQty = Qty<U>;
       CommonQty val1 = qtyCast<CommonQty>(q1);
       CommonQty val2 = qtyCast<CommonQty>(q2);
-      return val1.value == val2.value;      // return val1.value == val2.value;
+      return val1.value == val2.value;
   }
 
   template<typename U, typename R1, typename R2>
@@ -169,13 +169,24 @@ namespace phy {
    * Arithmetic operators
    */
 
+  // All arithmetic operators are of the same units so no need to check differences
+
   template<typename U, typename R1, typename R2>
   auto operator+(Qty<U, R1> q1, Qty<U, R2> q2) {
       using CommonQty = Qty<U>;
+      CommonQty val1 = qtyCast<CommonQty>(q1);
+      CommonQty val2 = qtyCast<CommonQty>(q2);
+      return CommonQty { val1.value + val2.value };
   }
 
   template<typename U, typename R1, typename R2>
-  auto operator-(Qty<U, R1> q1, Qty<U, R2> q2);
+  auto operator-(Qty<U, R1> q1, Qty<U, R2> q2) {
+      using CommonQty = Qty<U>;
+      CommonQty val1 = qtyCast<CommonQty>(q1);
+      CommonQty val2 = qtyCast<CommonQty>(q2);
+
+      return CommonQty{ val1.value - val2.value };
+  }
 
 #if 0
   template<typename U1, typename R1, typename U2, typename R2>
