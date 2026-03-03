@@ -128,7 +128,7 @@ namespace phy {
 
   template<typename U, typename R1, typename R2>
   bool operator==(Qty<U, R1> q1, Qty<U, R2> q2) {
-      using CommonQty = Qty<U, std::ratio<1>>;
+      using CommonQty = Qty<U>;
       CommonQty val1 = qtyCast<CommonQty>(q1);
       CommonQty val2 = qtyCast<CommonQty>(q2);
       return val1.value == val2.value;      // return val1.value == val2.value;
@@ -141,7 +141,7 @@ namespace phy {
 
   template<typename U, typename R1, typename R2>
   bool operator<(Qty<U, R1> q1, Qty<U, R2> q2) {
-      using CommonQty = Qty<U, std::ratio<1>>;
+      using CommonQty = Qty<U>;
       CommonQty val1 = qtyCast<CommonQty>(q1);
       CommonQty val2 = qtyCast<CommonQty>(q2);
       return val1.value < val2.value;
@@ -154,7 +154,7 @@ namespace phy {
 
   template<typename U, typename R1, typename R2>
   bool operator>(Qty<U, R1> q1, Qty<U, R2> q2) {
-      using CommonQty = Qty<U, std::ratio<1>>;
+      using CommonQty = Qty<U>;
       CommonQty val1 = qtyCast<CommonQty>(q1);
       CommonQty val2 = qtyCast<CommonQty>(q2);
       return val1.value > val2.value;
@@ -170,7 +170,9 @@ namespace phy {
    */
 
   template<typename U, typename R1, typename R2>
-  auto operator+(Qty<U, R1> q1, Qty<U, R2> q2);
+  auto operator+(Qty<U, R1> q1, Qty<U, R2> q2) {
+      using CommonQty = Qty<U>;
+  }
 
   template<typename U, typename R1, typename R2>
   auto operator-(Qty<U, R1> q1, Qty<U, R2> q2);
