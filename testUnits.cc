@@ -30,6 +30,7 @@ TEST(basicUnitTest, Volt) {
 /*
  * Basic comparaison operators
  */
+// Only need to test for ==, < and > since the others are variants of these
 
 TEST(quantityComparisonTestEquals, trueNoConversion) {
   const phy::Length l1(5);
@@ -54,6 +55,56 @@ TEST(quantityComparisonTestEquals, falseConversion) {
   const phy::Qty<phy::Metre, std::milli> l2(1001);
 
   EXPECT_FALSE(l1 == l2);
+}
+
+TEST(quantityComparisonTestLT, trueNoConversion) {
+  const phy::Length l1(5);
+  const phy::Length l2(6);
+
+  EXPECT_TRUE(l1 < l2);
+}
+TEST(quantityComparaisonTestLT, falseNoConversion) {
+  const phy::Length l1(5);
+  const phy::Length l2(3);
+
+  EXPECT_FALSE(l1 < l2);
+}
+TEST(quantityComparaisonTestLT, trueConversion) {
+  const phy::Length l1(5);
+  const phy::Qty<phy::Metre, std::milli> l2(5500);
+
+  EXPECT_TRUE(l1 < l2);
+}
+TEST(quantityComparaisonTestLT, falseConversion) {
+  const phy::Length l1(5);
+  const phy::Qty<phy::Metre, std::milli> l2(500);
+
+  EXPECT_FALSE(l1 < l2);
+}
+
+TEST(quantityComparaisonTestGT, trueNoConversion) {
+  const phy::Length l1(5);
+  const phy::Length l2(3);
+
+  EXPECT_TRUE(l1 > l2);
+}
+TEST(quantityComparaisonTestGT, falseNoConversion) {
+  const phy::Length l1(5);
+  const phy::Length l2(6);
+
+  EXPECT_FALSE(l1 > l2);
+}
+TEST(quantityComparaisonTestGT, trueConversion) {
+  const phy::Length l1(5);
+  const phy::Qty<phy::Metre, std::milli> l2(500);
+
+  EXPECT_TRUE(l1 > l2);
+}
+TEST(quantityComparaisonTestGT, falseConversion) {
+  const phy::Length l1(5);
+  const phy::Qty<phy::Metre, std::milli> l2(6000);
+
+  EXPECT_FALSE(l1 > l2);
 }
 
 /*
