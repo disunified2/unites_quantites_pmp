@@ -53,8 +53,8 @@ namespace phy {
 
     intmax_t value;
 
-      Qty() : value(0) {};
-      Qty(intmax_t v) : value(v) {};
+    Qty() : value(0) {};
+    Qty(intmax_t v) : value(v) {};
 
     template<typename ROther>
     Qty& operator+=(Qty<U, ROther> other) {
