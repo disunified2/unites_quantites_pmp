@@ -4,6 +4,10 @@
 
 #include <gtest/gtest.h>
 
+/*
+ * Basic tests to make sure initialization is correct
+ */
+
 TEST(basicUnitTest, Metre) {
   EXPECT_EQ(phy::Metre::metre, 1);
   EXPECT_EQ(phy::Metre::kilogram, 0);
@@ -23,7 +27,10 @@ TEST(basicUnitTest, Volt) {
   EXPECT_EQ(phy::Metre::candela, 0);
 }
 
-// Testing basic comparison operators
+/*
+ * Basic comparaison operators
+ */
+
 TEST(quantityComparisonTestEquals, trueNoConversion) {
   const phy::Length l1(5);
   const phy::Length l2(5);
@@ -48,6 +55,44 @@ TEST(quantityComparisonTestEquals, falseConversion) {
 
   EXPECT_FALSE(l1 == l2);
 }
+
+/*
+ * Testing + and - operators
+ */
+
+TEST(quantityAddingArithmeticTest, noConversion) {
+  const phy::Length l1(5);
+  const phy::Length l2(5);
+  const auto l3 = l1 + l2;
+
+  EXPECT_EQ(l3.value, 10);
+}
+TEST(quantityAddingArithmeticTest, conversion) {
+  const phy::Length l1(5);
+  const phy::Qty<phy::Metre, std::milli> l2(500);
+  const auto l3 = l1 + l2;
+
+  EXPECT_EQ(l3.value, 5500);
+}
+
+TEST(quantitySubtractingArithmeticTest, noConversion) {
+  const phy::Length l1(5);
+  const phy::Length l2(3);
+  const auto l3 = l1 - l2;
+
+  EXPECT_EQ(l3.value, 2);
+}
+TEST(quantitySubtractingArithmeticTest, conversion) {
+  const phy::Length l1(5);
+  const phy::Qty<phy::Metre, std::milli> l2(300);
+  const auto l3 = l1 - l2;
+
+  EXPECT_EQ(l3.value, 4700);
+}
+
+/*
+ * Testing += and -= operators
+ */
 
 TEST(quantityAddingTest,sameRatioMeters) {
   phy::Length l1(5);
