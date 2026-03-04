@@ -249,7 +249,7 @@ namespace phy {
     inline Temperature operator ""_celsius(unsigned long long int val) {
         //phy::Qty<Kelvin,std::ratio<27315,100>> res = (val+27315)/100;
 
-        return phy::Temperature((val+27315)/100);
+        return phy::Temperature(val+273);
     }
 
   }

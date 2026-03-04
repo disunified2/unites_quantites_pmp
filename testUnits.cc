@@ -178,20 +178,19 @@ TEST(quantityAddingTest,differentRatioMetersAndMilliEqualValue) {
 }
 
 TEST(quantityAddingTest,differentRatioMilliAndMeters) {
-  phy::Qty<phy::Metre, std::milli> l1(5000);
+  phy::Qty<phy::Metre, std::milli> l1(5);
   const phy::Length l2(5);
   l1 += l2;
 
-  EXPECT_EQ(l1.value, 10000);
+  EXPECT_EQ(l1.value, 5005);
 }
 
-//Demander si c'est normal comme comportement
 TEST(quantityAddingTest,differentRatioMetersAndMilli) {
   phy::Length l1(5);
   const phy::Qty<phy::Metre, std::milli> l2(5);
   l1 += l2;
 
-  EXPECT_EQ(l1.value, 5.005);
+  EXPECT_EQ(l1.value, 5);
 }
 
 TEST(quantityAddingTest,differentRatioKilosAndGramsEqualValue) {
@@ -203,11 +202,11 @@ TEST(quantityAddingTest,differentRatioKilosAndGramsEqualValue) {
 }
 
 TEST(quantityAddingTest,differentRatioGramsAndKilos) {
-  phy::Qty<phy::Kilogram, std::milli> m1(5000);
+  phy::Qty<phy::Kilogram, std::milli> m1(5);
   phy::Mass m2(5);
   m1 += m2;
 
-  EXPECT_EQ(m1.value, 10000);
+  EXPECT_EQ(m1.value, 5005);
 }
 
 TEST(quantitySubstractingTest,sameRatioMeters) {
@@ -224,6 +223,14 @@ TEST(quantitySubstractingTest,sameRatioMillimeters) {
   l1 -= l2;
 
   EXPECT_EQ(l1.value, 0);
+}
+
+TEST(quantitySubstractingTest,sameRatioMillimetersNegativeResult) {
+  phy::Qty<phy::Metre, std::milli> l1(5);
+  const phy::Qty<phy::Metre, std::milli> l2(10);
+  l1 -= l2;
+
+  EXPECT_EQ(l1.value, -5);
 }
 
 TEST(quantitySubstractingTest,sameRatiokilograms) {
@@ -243,20 +250,19 @@ TEST(quantitySubstractingTest,differentRatioMetersAndMilliEqualValue) {
 }
 
 TEST(quantitySubstractingTest,differentRatioMilliAndMeters) {
-  phy::Qty<phy::Metre, std::milli> l1(5000);
+  phy::Qty<phy::Metre, std::milli> l1(5);
   const phy::Length l2(5);
   l1 -= l2;
 
-  EXPECT_EQ(l1.value, 0);
+  EXPECT_EQ(l1.value, -4995);
 }
 
-//Demander si c'est normal comme comportement
 TEST(quantitySubstractingTest,differentRatioMetersAndMilli) {
   phy::Length l1(5);
   const phy::Qty<phy::Metre, std::milli> l2(5);
   l1 -= l2;
 
-  EXPECT_EQ(l1.value, 5.005);
+  EXPECT_EQ(l1.value, 5);
 }
 
 TEST(quantitySubstractingTest,differentRatioKilosAndGramsEqualValue) {
@@ -327,6 +333,18 @@ TEST(litterals, time2) {
   const auto x = 1000_seconds;
 
   EXPECT_EQ(x.value, 1000);
+}
+
+TEST(litterals, celsius1) {
+  const auto x = 1_celsius;
+
+  EXPECT_EQ(x.value, 274);
+}
+
+TEST(litterals, celsius2) {
+  const auto x = 10_celsius;
+
+  EXPECT_EQ(x.value, 283);
 }
 
 int main(int argc, char* argv[]) {
