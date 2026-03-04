@@ -219,37 +219,35 @@ namespace phy {
      */
 
     inline Length operator ""_metres(unsigned long long int val) {
-        return phy::Length(val);
+        return val;
     }
 
     inline Mass operator ""_kilograms(unsigned long long int val) {
-        return phy::Mass(val);
+        return val;
     }
 
     inline Time operator ""_seconds(unsigned long long int val) {
-        return phy::Time(val);
+        return val;
     }
 
     inline Current operator ""_amperes(unsigned long long int val) {
-        return phy::Current(val);
+        return val;
     }
 
     inline Temperature operator ""_kelvins(unsigned long long int val) {
-        return phy::Temperature(val);
+        return val;
     }
 
     inline Amount operator ""_moles(unsigned long long int val) {
-        return phy::Amount(val);
+        return val;
     }
 
     inline LuminousIntensity operator ""_candelas(unsigned long long int val) {
-        return phy::LuminousIntensity(val);
+        return val;
     }
 
     inline Temperature operator ""_celsius(unsigned long long int val) {
-        //phy::Qty<Kelvin,std::ratio<27315,100>> res = (val+27315)/100;
-
-        return phy::Temperature((val+27315)/100);
+        return val+273;
     }
 
   }
