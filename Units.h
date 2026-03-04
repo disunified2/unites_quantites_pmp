@@ -2,6 +2,8 @@
 #define UNITS_H
 
 #include <cstdint>
+#include <iostream>
+#include <ostream>
 #include <ratio>
 
 namespace phy {
@@ -124,30 +126,8 @@ namespace phy {
   // Namespace for all auxiliary functions that we could need and to keep code clean
   namespace details {
 
-      /*
-       * Find the common ratio between two different ratios
-       * Used by the operators when using qtyCast
-       */
-      constexpr intmax_t ct_abs(const intmax_t v) {
-          return v < 0 ? -v : v;
-      }
-      constexpr intmax_t ct_gcd(const intmax_t a, const intmax_t b) {
-          return b == 0 ? ct_abs(a) : ct_gcd(b, a % b);
-      }
-      constexpr intmax_t ct_lcm(const intmax_t a, const intmax_t b) {
-          return ct_abs(a / ct_gcd(a, b) * b);
-      }
-
-      template<typename R1, typename R2>
-      struct ratio_gcd {
-          using type = std::ratio<
-              ct_gcd(R1::num, R2::num),
-              ct_gcd(R1::den, R2::den)
-          >;
-      };
-
-      template<typename R1, typename R2>
-      using common_ratio = typename ratio_gcd<R1, R2>::type;
+    template<typename R1, typename R2>
+    using smallest_ratio = std::conditional_t<std::ratio_less_v<R1, R2>, R1, R2>;
 
   }
 
@@ -159,7 +139,7 @@ namespace phy {
 
   template<typename U, typename R1, typename R2>
   bool operator==(Qty<U, R1> q1, Qty<U, R2> q2) {
-      using CommonQty = Qty<U, details::common_ratio<R1, R2>>;
+      using CommonQty = Qty<U, details::smallest_ratio<R1, R2>>;
       CommonQty val1 = qtyCast<CommonQty>(q1);
       CommonQty val2 = qtyCast<CommonQty>(q2);
       return val1.value == val2.value;
@@ -172,7 +152,7 @@ namespace phy {
 
   template<typename U, typename R1, typename R2>
   bool operator<(Qty<U, R1> q1, Qty<U, R2> q2) {
-      using CommonQty = Qty<U, details::common_ratio<R1, R2>>;
+      using CommonQty = Qty<U, details::smallest_ratio<R1, R2>>;
       CommonQty val1 = qtyCast<CommonQty>(q1);
       CommonQty val2 = qtyCast<CommonQty>(q2);
       return val1.value < val2.value;
@@ -185,7 +165,7 @@ namespace phy {
 
   template<typename U, typename R1, typename R2>
   bool operator>(Qty<U, R1> q1, Qty<U, R2> q2) {
-      using CommonQty = Qty<U, details::common_ratio<R1, R2>>;
+      using CommonQty = Qty<U, details::smallest_ratio<R1, R2>>;
       CommonQty val1 = qtyCast<CommonQty>(q1);
       CommonQty val2 = qtyCast<CommonQty>(q2);
       return val1.value > val2.value;
@@ -204,19 +184,24 @@ namespace phy {
 
   template<typename U, typename R1, typename R2>
   auto operator+(Qty<U, R1> q1, Qty<U, R2> q2) {
-      using CommonQty = Qty<U, details::common_ratio<R1, R2>>;
-      CommonQty val1 = qtyCast<CommonQty>(q1);
-      CommonQty val2 = qtyCast<CommonQty>(q2);
-      return CommonQty { val1.value + val2.value };
+      if constexpr (std::ratio_less_v<R1, R2>) {
+          Qty<U, R1> res(q1.value + qtyCast<Qty<U, R1>>(q2).value);
+          return res;
+      } else {
+          Qty<U, R2> res(q2.value + qtyCast<Qty<U, R2>>(q1).value);
+          return res;
+      }
   }
 
   template<typename U, typename R1, typename R2>
   auto operator-(Qty<U, R1> q1, Qty<U, R2> q2) {
-      using CommonQty = Qty<U, details::common_ratio<R1, R2>>;
-      CommonQty val1 = qtyCast<CommonQty>(q1);
-      CommonQty val2 = qtyCast<CommonQty>(q2);
-
-      return CommonQty{ val1.value - val2.value };
+      if constexpr (std::ratio_less_v<R1, R2>) {
+          Qty<U, R1> res(q1.value - qtyCast<Qty<U, R1>>(q2).value);
+          return res;
+      } else {
+          Qty<U, R2> res(qtyCast<Qty<U, R2>>(q1).value - q2.value);
+          return res;
+      }
   }
 
 #if 0
