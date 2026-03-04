@@ -291,6 +291,44 @@ TEST(quantitySubstractingTest, notEqualZeroNegative) {
   EXPECT_EQ(l1.value, -10);
 }
 
+using namespace phy::literals;
+
+TEST(litterals, length1) {
+  const auto x = 5_metres;
+
+  EXPECT_EQ(x.value, 5);
+}
+
+TEST(litterals, length2) {
+  const auto x = 1000_metres;
+
+  EXPECT_EQ(x.value, 1000);
+}
+
+TEST(litterals, mass1) {
+  const auto x = 5_kilograms;
+
+  EXPECT_EQ(x.value, 5);
+}
+
+TEST(litterals, mass2) {
+  const auto x = 1000_kilograms;
+
+  EXPECT_EQ(x.value, 1000);
+}
+
+TEST(litterals, time1) {
+  const auto x = 5_seconds;
+
+  EXPECT_EQ(x.value, 5);
+}
+
+TEST(litterals, time2) {
+  const auto x = 1000_seconds;
+
+  EXPECT_EQ(x.value, 1000);
+}
+
 int main(int argc, char* argv[]) {
   ::testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();
