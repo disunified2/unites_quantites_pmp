@@ -30,8 +30,8 @@ TEST(basicUnitTest, Volt) {
 /*
  * Basic comparaison operators
  */
-// Only need to test for ==, < and > since the others are variants of these
 
+// == Operator
 TEST(quantityComparisonTestEquals, trueNoConversion) {
   const phy::Length l1(5);
   const phy::Length l2(5);
@@ -57,6 +57,32 @@ TEST(quantityComparisonTestEquals, falseConversion) {
   EXPECT_FALSE(l1 == l2);
 }
 
+TEST(advancedQuantityComparaisonTestEquals, trueNoConversion) {
+  const phy::MeterSecond s1(10);
+  const phy::MeterSecond s2(10);
+
+  EXPECT_TRUE(s1 == s2);
+}
+TEST(advancedQuantityComparaisonTestEquals, falseNoConversion) {
+  const phy::MeterSecond s1(10);
+  const phy::MeterSecond s2(9);
+
+  EXPECT_FALSE(s1 == s2);
+}
+TEST(advancedQuantityComparaisonTestEquals, trueConversion) {
+  const phy::MeterSecond s1(1000);
+  const phy::Qty<phy::Speed, std::kilo> s2(1);
+
+  EXPECT_TRUE(s1 == s2);
+}
+TEST(advancedQuantityComparaisonTestEquals, falseConversion) {
+  const phy::MeterSecond s1(1001);
+  const phy::Qty<phy::Speed, std::kilo> s2(1);
+
+  EXPECT_FALSE(s1 == s2);
+}
+
+// < operator
 TEST(quantityComparisonTestLT, trueNoConversion) {
   const phy::Length l1(5);
   const phy::Length l2(6);
@@ -82,6 +108,32 @@ TEST(quantityComparaisonTestLT, falseConversion) {
   EXPECT_FALSE(l1 < l2);
 }
 
+TEST(advancedQuantityComparaisonTestLT, trueNoConversion) {
+  const phy::MeterSecond s1(10);
+  const phy::MeterSecond s2(11);
+
+  EXPECT_TRUE(s1 < s2);
+}
+TEST(advancedQuantityComparaisonTestLT, falseNoConversion) {
+  const phy::MeterSecond s1(10);
+  const phy::MeterSecond s2(9);
+
+  EXPECT_FALSE(s1 < s2);
+}
+TEST(advancedQuantityComparaisonTestLT, trueConversion) {
+  const phy::MeterSecond s1(10);
+  const phy::Qty<phy::Speed, std::kilo> s2(1);
+
+  EXPECT_TRUE(s1 < s2);
+}
+TEST(advancedQuantityComparaisonTestLT, falseConversion) {
+  const phy::MeterSecond s1(5000);
+  const phy::Qty<phy::Speed, std::kilo> s2(1);
+
+  EXPECT_FALSE(s1 < s2);
+}
+
+// > operator
 TEST(quantityComparaisonTestGT, trueNoConversion) {
   const phy::Length l1(5);
   const phy::Length l2(3);
@@ -107,6 +159,31 @@ TEST(quantityComparaisonTestGT, falseConversion) {
   EXPECT_FALSE(l1 > l2);
 }
 
+TEST(advancedQuantityComparaisonTestGT, trueNoConversion) {
+  const phy::MeterSecond s1(10);
+  const phy::MeterSecond s2(9);
+
+  EXPECT_TRUE(s1 > s2);
+}
+TEST(advancedQuantityComparaisonTestGT, falseNoConversion) {
+  const phy::MeterSecond s1(10);
+  const phy::MeterSecond s2(11);
+
+  EXPECT_FALSE(s1 > s2);
+}
+TEST(advancedQuantityComparaisonTestGT, trueConversion) {
+  const phy::MeterSecond s1(2000);
+  const phy::Qty<phy::Speed, std::kilo> s2(1);
+
+  EXPECT_TRUE(s1 > s2);
+}
+TEST(advancedQuantityComparaisonTestGT, falseConversion) {
+  const phy::MeterSecond s1(900);
+  const phy::Qty<phy::Speed, std::kilo> s2(1);
+
+  EXPECT_FALSE(s1 > s2);
+}
+
 /*
  * Testing + and - operators
  */
@@ -125,6 +202,13 @@ TEST(quantityAddingArithmeticTest, conversion) {
 
   EXPECT_EQ(l3.value, 5500);
 }
+TEST(quantityAddingArithmeticTest, negative) {
+  const phy::Length l1(-5);
+  const phy::Length l2(5);
+  const auto l3 = l1 + l2;
+
+  EXPECT_EQ(l3.value, 0);
+}
 
 TEST(quantitySubtractingArithmeticTest, noConversion) {
   const phy::Length l1(5);
@@ -139,6 +223,13 @@ TEST(quantitySubtractingArithmeticTest, conversion) {
   const auto l3 = l1 - l2;
 
   EXPECT_EQ(l3.value, 4700);
+}
+TEST(quantitySubtractingArithmeticTest, negative) {
+  const phy::Length l1(-5);
+  const phy::Length l2(5);
+  const auto l3 = l1 - l2;
+
+  EXPECT_EQ(l3.value, -10);
 }
 
 /*
