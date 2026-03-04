@@ -202,6 +202,13 @@ TEST(quantityAddingArithmeticTest, conversion) {
 
   EXPECT_EQ(l3.value, 5500);
 }
+TEST(quantityAddingArithmeticTest, negative) {
+  const phy::Length l1(-5);
+  const phy::Length l2(5);
+  const auto l3 = l1 + l2;
+
+  EXPECT_EQ(l3.value, 0);
+}
 
 TEST(quantitySubtractingArithmeticTest, noConversion) {
   const phy::Length l1(5);
@@ -216,6 +223,13 @@ TEST(quantitySubtractingArithmeticTest, conversion) {
   const auto l3 = l1 - l2;
 
   EXPECT_EQ(l3.value, 4700);
+}
+TEST(quantitySubtractingArithmeticTest, negative) {
+  const phy::Length l1(-5);
+  const phy::Length l2(5);
+  const auto l3 = l1 - l2;
+
+  EXPECT_EQ(l3.value, -10);
 }
 
 /*
