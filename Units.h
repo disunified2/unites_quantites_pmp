@@ -2,6 +2,8 @@
 #define UNITS_H
 
 #include <cstdint>
+#include <iostream>
+#include <ostream>
 #include <ratio>
 
 namespace phy {
@@ -120,6 +122,15 @@ namespace phy {
       return res;
   }
 
+
+  // Namespace for all auxiliary functions that we could need and to keep code clean
+  namespace details {
+
+    template<typename R1, typename R2>
+    using smallest_ratio = std::conditional_t<std::ratio_less_v<R1, R2>, R1, R2>;
+
+  }
+
   /*
    * Comparison operators
    */
@@ -128,10 +139,10 @@ namespace phy {
 
   template<typename U, typename R1, typename R2>
   bool operator==(Qty<U, R1> q1, Qty<U, R2> q2) {
-      using CommonQty = Qty<U, std::ratio<1>>;
+      using CommonQty = Qty<U, details::smallest_ratio<R1, R2>>;
       CommonQty val1 = qtyCast<CommonQty>(q1);
       CommonQty val2 = qtyCast<CommonQty>(q2);
-      return val1.value == val2.value;      // return val1.value == val2.value;
+      return val1.value == val2.value;
   }
 
   template<typename U, typename R1, typename R2>
@@ -141,7 +152,7 @@ namespace phy {
 
   template<typename U, typename R1, typename R2>
   bool operator<(Qty<U, R1> q1, Qty<U, R2> q2) {
-      using CommonQty = Qty<U, std::ratio<1>>;
+      using CommonQty = Qty<U, details::smallest_ratio<R1, R2>>;
       CommonQty val1 = qtyCast<CommonQty>(q1);
       CommonQty val2 = qtyCast<CommonQty>(q2);
       return val1.value < val2.value;
@@ -154,7 +165,7 @@ namespace phy {
 
   template<typename U, typename R1, typename R2>
   bool operator>(Qty<U, R1> q1, Qty<U, R2> q2) {
-      using CommonQty = Qty<U, std::ratio<1>>;
+      using CommonQty = Qty<U, details::smallest_ratio<R1, R2>>;
       CommonQty val1 = qtyCast<CommonQty>(q1);
       CommonQty val2 = qtyCast<CommonQty>(q2);
       return val1.value > val2.value;
@@ -169,11 +180,29 @@ namespace phy {
    * Arithmetic operators
    */
 
-  template<typename U, typename R1, typename R2>
-  auto operator+(Qty<U, R1> q1, Qty<U, R2> q2);
+  // All arithmetic operators are of the same units so no need to check differences
 
   template<typename U, typename R1, typename R2>
-  auto operator-(Qty<U, R1> q1, Qty<U, R2> q2);
+  auto operator+(Qty<U, R1> q1, Qty<U, R2> q2) {
+      if constexpr (std::ratio_less_v<R1, R2>) {
+          Qty<U, R1> res(q1.value + qtyCast<Qty<U, R1>>(q2).value);
+          return res;
+      } else {
+          Qty<U, R2> res(q2.value + qtyCast<Qty<U, R2>>(q1).value);
+          return res;
+      }
+  }
+
+  template<typename U, typename R1, typename R2>
+  auto operator-(Qty<U, R1> q1, Qty<U, R2> q2) {
+      if constexpr (std::ratio_less_v<R1, R2>) {
+          Qty<U, R1> res(q1.value - qtyCast<Qty<U, R1>>(q2).value);
+          return res;
+      } else {
+          Qty<U, R2> res(qtyCast<Qty<U, R2>>(q1).value - q2.value);
+          return res;
+      }
+  }
 
 #if 0
   template<typename U1, typename R1, typename U2, typename R2>
