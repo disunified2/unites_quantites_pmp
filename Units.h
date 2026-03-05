@@ -98,11 +98,11 @@ namespace phy {
    * Some weird quantities
    */
 
-  using Mile                  = Qty<Metre, std::ratio<1609344, 1000>>;
-  using Yard                  = Qty<Metre, std::ratio<9144, 10000>>;
-  using Foot                  = Qty<Metre, std::ratio<3048, 10000>>;
-  using Inch                  = Qty<Metre, std::ratio<254, 10000>>;
-  using Knot                  = Qty<Speed, std::ratio<463, 900>>;
+  using Mile                  = Qty<Metre, std::ratio<16093440, 10000>>;
+  using Yard                  = Qty<Metre, std::ratio<91440000, 100000000>>;
+  using Foot                  = Qty<Metre, std::ratio<30480000, 100000000>>;
+  using Inch                  = Qty<Metre, std::ratio<25400000, 1000000000>>;
+  using Knot                  = Qty<Speed, std::ratio<46300000, 90000000>>;
 
   /*
    * Cast function between two quantities
