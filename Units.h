@@ -204,13 +204,35 @@ namespace phy {
       }
   }
 
-#if 0
-  template<typename U1, typename R1, typename U2, typename R2>
-  auto operator*(Qty<U1,R1> q1, Qty<U2,R2> q2);
 
   template<typename U1, typename R1, typename U2, typename R2>
-  auto operator/(Qty<U1, R1> q1, Qty<U2, R2> q2);
-#endif
+  auto operator*(Qty<U1,R1> q1, Qty<U2,R2> q2) {
+      using unitRes = Unit<U1::metre+U2::metre,U1::kilogram+U2::kilogram,
+      U1::second+U2::second,U1::ampere+U2::ampere,
+      U1::kelvin+U2::kelvin,U1::mole+U2::mole,
+      U1::candela+U2::candela>;
+
+      using ratioRes = std::ratio_multiply<R1,R2>;
+
+      intmax_t res = (q1.value * ratioRes::num/ratioRes::den) * (q2.value* ratioRes::num/ratioRes::den);
+
+      return Qty<unitRes,ratioRes>(res);
+  }
+
+  template<typename U1, typename R1, typename U2, typename R2>
+  auto operator/(Qty<U1, R1> q1, Qty<U2, R2> q2) {
+      using unitRes = Unit<U1::metre-U2::metre,U1::kilogram-U2::kilogram,
+      U1::second-U2::second,U1::ampere-U2::ampere,
+      U1::kelvin-U2::kelvin,U1::mole-U2::mole,
+      U1::candela-U2::candela>;
+
+      using ratioRes = std::ratio_divide<R1,R2>;
+
+      intmax_t res = (q1.value * ratioRes::num/ratioRes::den) / (q2.value* ratioRes::num/ratioRes::den);
+
+      return Qty<unitRes,ratioRes>(res);
+  }
+
 
   namespace literals {
 
