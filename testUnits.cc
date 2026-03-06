@@ -522,6 +522,17 @@ TEST(quantityDividingTest, HertzDividedBySecond) {
   EXPECT_EQ(res.value,5);
 }
 
+TEST(quantityDividingTest, calculatedSpeed) {
+  const phy::Length l(30);
+  const phy::Time t(1);
+  const phy::MeterSecond s1(30);
+  const auto s2 = l / t;
+
+  EXPECT_EQ(decltype(s2)::Unit::metre, 1);
+  EXPECT_EQ(decltype(s2)::Unit::second, -1);
+  EXPECT_TRUE(s1 == s2);
+}
+
 /*
  * Tests for the weird imperial units
  */
@@ -608,12 +619,6 @@ TEST(weirdQuantitiesSubtractingTest, conversion) {
 
   EXPECT_EQ(i2.value, 11);
 }
-
-/*
- * TODO : Test knots once *operator and /operator is coded
- *        This is due to the fact that knots is a combination and multiplication of multiple quantities
- */
-
 
 /*
  * Testing usage of literals
