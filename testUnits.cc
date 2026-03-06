@@ -388,6 +388,145 @@ TEST(quantitySubstractingTest, notEqualZeroNegative) {
   EXPECT_EQ(l1.value, -10);
 }
 
+/*
+ * Testing * and / operators
+ */
+
+
+TEST(quantityMultiplicatingTest, LengthTimesTime1) {
+  phy::Length l(100000);
+  phy::Time s(3600);
+
+  auto res = l * s;
+
+  EXPECT_EQ(decltype(res)::Unit::metre, 1);
+  EXPECT_EQ(decltype(res)::Unit::second, 1);
+  EXPECT_EQ(res.value,360000000);
+}
+
+TEST(quantityMultiplicatingTest, LengthTimesTime2) {
+  phy::Length l(2);
+  phy::Time s(3);
+
+  auto res = l * s;
+
+  EXPECT_EQ(decltype(res)::Unit::metre, 1);
+  EXPECT_EQ(decltype(res)::Unit::second, 1);
+  EXPECT_EQ(res.value,6);
+}
+
+TEST(quantityMultiplicatingTest, TimeTimesMass1) {
+  phy::Time s(60);
+  phy::Mass l(10);
+
+  auto res = l * s;
+
+  EXPECT_EQ(decltype(res)::Unit::second, 1);
+  EXPECT_EQ(decltype(res)::Unit::kilogram, 1);
+  EXPECT_EQ(res.value,600);
+}
+
+TEST(quantityMultiplicatingTest, TemperatureTimesMass) {
+  phy::Temperature k(10);
+  phy::Mass m(100);
+
+  auto res = m * k;
+
+  EXPECT_EQ(decltype(res)::Unit::kelvin, 1);
+  EXPECT_EQ(decltype(res)::Unit::kilogram, 1);
+  EXPECT_EQ(res.value,1000);
+}
+
+TEST(quantityMultiplicatingTest, AmountTimesCurrent) {
+  phy::Current a(3);
+  phy::Amount m(2);
+
+  auto res = m * a;
+
+  EXPECT_EQ(decltype(res)::Unit::ampere, 1);
+  EXPECT_EQ(decltype(res)::Unit::mole, 1);
+  EXPECT_EQ(res.value,6);
+}
+
+TEST(quantityMultiplicatingTest, HertzTimesSecond) {
+  phy::Frequency h(2);
+  phy::Time s(10);
+
+  auto res = s * h;
+
+  EXPECT_EQ(decltype(res)::Unit::second, 0);
+  EXPECT_EQ(res.value,20);
+}
+
+TEST(quantityDividingTest, LengthDividedByTime1) {
+  phy::Length l(100000);
+  phy::Time s(3600);
+
+  auto res = l / s;
+
+  EXPECT_EQ(decltype(res)::Unit::metre, 1);
+  EXPECT_EQ(decltype(res)::Unit::second, -1);
+  EXPECT_EQ(res.value,27);
+}
+
+TEST(quantityDividingTest, LengthDividedByTime2) {
+  phy::Length l(20);
+  phy::Time s(10);
+
+  auto res = l / s;
+
+  EXPECT_EQ(decltype(res)::Unit::metre, 1);
+  EXPECT_EQ(decltype(res)::Unit::second, -1);
+  EXPECT_EQ(res.value,2);
+}
+
+TEST(quantityDividingTest, MassDividedByTime) {
+  phy::Mass m(100);
+  phy::Time s(60);
+
+  auto res = m / s;
+
+  EXPECT_EQ(decltype(res)::Unit::second, -1);
+  EXPECT_EQ(decltype(res)::Unit::kilogram, 1);
+  EXPECT_EQ(res.value,1);
+}
+
+TEST(quantityDividingTest, MassDividedByTemperature) {
+  phy::Mass m(100);
+  phy::Temperature k(10);
+
+  auto res = m / k;
+
+  EXPECT_EQ(decltype(res)::Unit::kelvin, -1);
+  EXPECT_EQ(decltype(res)::Unit::kilogram, 1);
+  EXPECT_EQ(res.value,10);
+}
+
+TEST(quantityDividingTest, AmountDividedByCurrent) {
+  phy::Amount m(2);
+  phy::Current a(2);
+
+  auto res = m / a;
+
+  EXPECT_EQ(decltype(res)::Unit::ampere, -1);
+  EXPECT_EQ(decltype(res)::Unit::mole, 1);
+  EXPECT_EQ(res.value,1);
+}
+
+TEST(quantityDividingTest, HertzDividedBySecond) {
+  phy::Time s(10);
+  phy::Frequency h(2);
+
+  auto res = s / h;
+
+  EXPECT_EQ(decltype(res)::Unit::second, 2);
+  EXPECT_EQ(res.value,5);
+}
+
+/*
+ * Testing litterals
+ */
+
 using namespace phy::literals;
 
 TEST(litterals, length1) {
