@@ -392,7 +392,6 @@ TEST(quantitySubstractingTest, notEqualZeroNegative) {
  * Testing * and / operators
  */
 
-
 TEST(quantityMultiplicatingTest, LengthTimesTime1) {
   phy::Length l(100000);
   phy::Time s(3600);
@@ -524,7 +523,100 @@ TEST(quantityDividingTest, HertzDividedBySecond) {
 }
 
 /*
- * Testing litterals
+ * Tests for the weird imperial units
+ */
+
+TEST(weirdQuantitiesEqualityTest, footInch) {
+  const phy::Foot f(1);
+  const phy::Inch i(12);
+
+  EXPECT_TRUE(f == i);
+}
+TEST(weirdQuantitiesEqualityTest, yardFoot) {
+  const phy::Yard y(1);
+  const phy::Foot f(3);
+
+  EXPECT_TRUE(f == y);
+}
+TEST(weirdQuantitiesEqualityTest, mileYard) {
+  const phy::Mile m(1);
+  const phy::Yard y(1760);
+
+  EXPECT_TRUE(m == y);
+}
+TEST(weirdQuantitiesEqualityTest, additionEquals) {
+  const phy::Inch i1(6);
+  const phy::Inch i2(6);
+  const phy::Foot f(1);
+  const auto i3 = i1 + i2;
+
+  EXPECT_TRUE(f == i3);
+}
+
+TEST(weirdQuantitiesLTTest, noConversion) {
+  const phy::Inch i1(4);
+  const phy::Inch i2(5);
+
+  EXPECT_TRUE(i1 < i2);
+}
+TEST(weirdQuantitiesLTTest, conversion) {
+  const phy::Inch i(13);
+  const phy::Foot f(1);
+
+  EXPECT_TRUE(f < i);
+}
+
+TEST(weirdQuantitiesGTTest, noConversion) {
+  const phy::Inch i1(4);
+  const phy::Inch i2(3);
+
+  EXPECT_TRUE(i1 > i2);
+}
+TEST(weirdQuantitiesGTTest, conversion) {
+  const phy::Inch i(13);
+  const phy::Foot f(1);
+
+  EXPECT_TRUE(i > f);
+}
+
+TEST(weirdQuantitiesAdditionTest, noConversion) {
+  const phy::Inch i1(5);
+  const phy::Inch i2(5);
+  const auto i3 = i1 + i2;
+
+  EXPECT_EQ(i3.value, 10);
+}
+TEST(weirdQuanitiesAdditionTest, conversion) {
+  const phy::Inch i1(5);
+  const phy::Foot f(1);
+  const auto i2 = i1 + f;
+
+  EXPECT_EQ(i2.value, 17);
+}
+
+TEST(weirdQuantitiesSubtractionTest, noConversion) {
+  const phy::Inch i1(5);
+  const phy::Inch i2(3);
+  const auto i3 = i1 - i2;
+
+  EXPECT_EQ(i3.value, 2);
+}
+TEST(weirdQuantitiesSubtractingTest, conversion) {
+  const phy::Foot f(1);
+  const phy::Inch i1(1);
+  const auto i2 = f - i1;
+
+  EXPECT_EQ(i2.value, 11);
+}
+
+/*
+ * TODO : Test knots once *operator and /operator is coded
+ *        This is due to the fact that knots is a combination and multiplication of multiple quantities
+ */
+
+
+/*
+ * Testing usage of literals
  */
 
 using namespace phy::literals;
